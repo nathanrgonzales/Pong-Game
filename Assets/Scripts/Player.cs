@@ -22,6 +22,7 @@ public class Player : MonoBehaviour
     
     void FixedUpdate()
     {
-        
+        m_Velocity.y = Input.GetAxisRaw(m_InputName) * m_Speed;
+        m_RigidBody2D.velocity = m_Velocity;
     }
 }
