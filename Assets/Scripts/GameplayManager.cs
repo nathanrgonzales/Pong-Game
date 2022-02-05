@@ -1,6 +1,5 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class GameplayManager : MonoBehaviour
 {
@@ -11,9 +10,33 @@ public class GameplayManager : MonoBehaviour
         get { return s_Instance; }
     }
 
+    [Header("Game")]
+    [SerializeField]
+    private GameObject m_GameGroup;
+
+    [Header("Game Over")]
+    [SerializeField]
+    private GameObject m_GameOverGroup;
+    [SerializeField]
+    private UnityEngine.UI.Text m_UITextWinner;
+
     [Header("Score")]
     [SerializeField]
     private UnityEngine.UI.Text[] m_UITextScore = new UnityEngine.UI.Text[2];
+
+   [SerializeField]
+    private int m_EndGameScore;
+
+    private int[] m_Score;
+
+    private bool m_IsGameOver;
+
+
+    public enum PlayerType
+    {
+        P1 = 0,
+        P2
+    }
 
     void Awake()
     {
@@ -27,19 +50,6 @@ public class GameplayManager : MonoBehaviour
         }
     }
 
-    public enum PlayerType
-    {
-        P1 = 0,
-        P2
-    }
-
-    [SerializeField]
-    private int m_EndGameScore;
-
-    private int[] m_Score;
-
-    private bool m_IsGameOver;
-
     void Start()
     {
         m_Score = new int[2];
@@ -52,7 +62,14 @@ public class GameplayManager : MonoBehaviour
         m_Score[1] = 0;
         m_UITextScore[0].text = m_Score[0].ToString();
         m_UITextScore[1].text = m_Score[1].ToString();
-        m_IsGameOver = false;
+        SetGameOver(false);
+    }
+
+    private void SetGameOver(bool isGameOver)
+    {
+        m_IsGameOver = isGameOver;
+        m_GameGroup.SetActive(!m_IsGameOver);
+        m_GameOverGroup.SetActive(m_IsGameOver);
     }
 
     public void IncScore(PlayerType player)
@@ -60,7 +77,7 @@ public class GameplayManager : MonoBehaviour
         int index = (int)player;
         ++m_Score[index];
         m_UITextScore[index].text = m_Score[index].ToString();
-        
+
         if(m_Score[index] == m_EndGameScore)
         {
             GameOver();
@@ -79,12 +96,17 @@ public class GameplayManager : MonoBehaviour
 
     public void GameOver()
     {
-        Debug.Log("GameOver: Winner - " + GetWinner());
-        m_IsGameOver = true;
+        m_UITextWinner.text = "Vencedor Player " + ((int)GetWinner() + 1);
+        SetGameOver(true);        
     }
 
     void Update()
     {
+        if  ((Input.GetKeyDown(KeyCode.Escape)) ||
+             (m_IsGameOver && Input.anyKeyDown))
+            {
+                SceneManager.LoadScene("Menu");
+            }
         
     }
 }
