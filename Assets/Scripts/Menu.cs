@@ -11,7 +11,7 @@ public class Menu : MonoBehaviour
         }
         else if(Input.anyKeyDown)
         {
-            SceneManager.LoadScene("GamePlay");
+            SceneManager.LoadScene("GamePlayPvsC");
         }
     }
 }

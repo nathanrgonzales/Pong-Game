@@ -13,6 +13,8 @@ public class GameplayManager : MonoBehaviour
     [Header("Game")]
     [SerializeField]
     private GameObject m_GameGroup;
+    [SerializeField]
+    private bool m_IsCPU;
 
     [Header("Game Over")]
     [SerializeField]
@@ -96,7 +98,21 @@ public class GameplayManager : MonoBehaviour
 
     public void GameOver()
     {
-        m_UITextWinner.text = "Vencedor Player " + ((int)GetWinner() + 1);
+        if(m_IsCPU)
+        {
+            if((int)GetWinner() == 1)
+            {
+                m_UITextWinner.text = "Vencedor CPU";
+            }
+            else
+            {
+                m_UITextWinner.text = "Vencedor Player 1";
+            }            
+        }
+        else
+        {
+            m_UITextWinner.text = "Vencedor Player " + ((int)GetWinner() + 1);
+        }        
         SetGameOver(true);        
     }
 

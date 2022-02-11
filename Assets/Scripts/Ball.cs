@@ -17,6 +17,7 @@ public class Ball : MonoBehaviour
     private AudioSource m_AudioSource;
 
     private Rigidbody2D m_RigidBody2D;
+    private Rigidbody2D m_WallMiddle;
     private Vector2 m_Velocity;
 
     private float m_InitialSpeed;
@@ -46,7 +47,13 @@ public class Ball : MonoBehaviour
 
     void OnCollisionEnter2D(Collision2D other) 
     {
-        m_AudioSource.Play();
+
+        if (other.gameObject.name == "WallMiddle")
+        {
+            Physics2D.IgnoreCollision(other.gameObject.GetComponent<Collider2D>(), GetComponent<Collider2D>());
+        }
+
+        m_AudioSource.Play();        
         switch(other.gameObject.name) 
         {
             case "PaddleP1":
@@ -55,6 +62,7 @@ public class Ball : MonoBehaviour
                 break;
 
             case "PaddleP2":
+            case "PaddleCPU":
                 IncSpeed();
                 UpdateVelocity(-1.0f, GetHitYAxis(other));
                 break;                
